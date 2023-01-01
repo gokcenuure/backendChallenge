@@ -21,7 +21,7 @@ public class Company {
     @Column(name = "company_id")
     public int companyId;
 
-    public int companyName;
+    public String companyName;
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
