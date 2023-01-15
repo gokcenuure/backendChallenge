@@ -32,12 +32,5 @@ public class Employee {
 
     public String position;
 
-    public Employee(String name, String surname, String position) {
-        this.name = name;
-        this.surname = surname;
-        this.position = position;
-    }
 
-    @OneToMany(mappedBy = "employee")
-    private List<Company> companies;
 }

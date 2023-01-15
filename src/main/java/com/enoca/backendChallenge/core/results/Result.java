@@ -12,6 +12,10 @@ public class Result {
         this(success);
         this.message = message;
     }
+    public Result() {
+
+    }
+
     public boolean isSuccess()  {
         return this.success;
     }
