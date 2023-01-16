@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data
@@ -18,19 +17,42 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "employee_id")
-    public int employeeId;
+    private int employeeId;
 
-    public String name;
+    private String name;
 
-    public String surname;
+    private String surname;
 
-    public String phoneNumber;
+    private String phoneNumber;
 
-    public String email;
+    private String email;
 
-    public String password;
+    private String password;
 
-    public String position;
+    private String position;
+
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+
+//
+//    public Employee(String name, String surname, String phoneNumber, String email, String password, String position, Company company) {
+//        this.name = name;
+//        this.surname = surname;
+//        this.phoneNumber = phoneNumber;
+//        this.email = email;
+//        this.password = password;
+//        this.position = position;
+//        this.company = company;
+//    }
+//    public void setCompany(Company companyId) {
+//        Company company = new Company();
+//        //companyId kullanarak company nesnesi oluşturulur
+//        this.company = company;
+//    }
+
 
 
 }

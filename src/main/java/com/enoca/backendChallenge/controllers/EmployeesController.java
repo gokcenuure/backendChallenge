@@ -5,6 +5,8 @@ import com.enoca.backendChallenge.business.abstracts.EmployeeService;
 import com.enoca.backendChallenge.core.results.DataResult;
 import com.enoca.backendChallenge.core.results.Result;
 import com.enoca.backendChallenge.entities.concretes.Employee;
+import com.enoca.backendChallenge.entities.dtos.CreateEmployeeDto;
+import com.enoca.backendChallenge.entities.dtos.UpdateEmployeeDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +24,13 @@ public class EmployeesController {
     private EmployeeService employeeService;
 
     @PostMapping("/employee/add")
-    public Result create(@RequestBody Employee employee) {
+    public Result create(@RequestBody CreateEmployeeDto employee) {
         return this.employeeService.create(employee);
     }
 
-    @PutMapping("/employee/update")
-    public Result update(Employee employee) {
-        return this.employeeService.update(employee);
+    @PutMapping("/employee/update/{id}")
+    public Result update(@RequestBody UpdateEmployeeDto employee, @PathVariable int id) {
+        return this.employeeService.update(employee, id);
     }
 
     @DeleteMapping("/employee/delete")

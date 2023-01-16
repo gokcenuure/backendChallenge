@@ -5,6 +5,8 @@ import com.enoca.backendChallenge.business.abstracts.CompanyService;
 import com.enoca.backendChallenge.core.results.DataResult;
 import com.enoca.backendChallenge.core.results.Result;
 import com.enoca.backendChallenge.entities.concretes.Company;
+import com.enoca.backendChallenge.entities.dtos.CreateCompanyDto;
+import com.enoca.backendChallenge.entities.dtos.UpdateCompanyDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +26,13 @@ public class CompaniesController {
 
 
     @PostMapping("/company/add")
-    public Result create(@RequestBody Company company) {
+    public Result create(@RequestBody CreateCompanyDto company) {
         return this.companyService.create(company);
     }
-    @PutMapping("/company/update")
-    public Result update(Company company) {
-        return this.companyService.update(company);
+
+    @PutMapping("/company/update/{id}")
+    public Result update(@RequestBody UpdateCompanyDto company, @PathVariable int id) {
+        return this.companyService.update(company, id);
     }
 
     @DeleteMapping("/company/delete")

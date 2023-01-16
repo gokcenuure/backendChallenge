@@ -4,8 +4,10 @@ import com.enoca.backendChallenge.business.abstracts.CompanyService;
 import com.enoca.backendChallenge.core.results.*;
 import com.enoca.backendChallenge.dataAccess.abstracts.CompanyRepository;
 import com.enoca.backendChallenge.entities.concretes.Company;
+import com.enoca.backendChallenge.entities.dtos.CreateCompanyDto;
+import com.enoca.backendChallenge.entities.dtos.UpdateCompanyDto;
 import com.enoca.backendChallenge.exceptions.CompanyNotFoundException;
-import com.enoca.backendChallenge.exceptions.InvalidCompanyIdException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,53 +18,38 @@ public class CompanyManager implements CompanyService {
 
 
     @Autowired
-    public CompanyManager(CompanyRepository companyRepository) {
+    public CompanyManager(CompanyRepository companyRepository, ModelMapper modelMapper) {
         this.companyRepository = companyRepository;
+        this.modelMapper = modelMapper;
     }
 
     private CompanyRepository companyRepository;
+    private ModelMapper modelMapper;
 
     @Override
-    public Result create(Company company) {
-        try {
-            if (company.getCompanyId() == 0) {
-                throw new InvalidCompanyIdException("Company id can not be 0");
-            }
-            this.companyRepository.save(company);
-            return new SuccessResult("Company added");
-        } catch (InvalidCompanyIdException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
+    public Result create(CreateCompanyDto company) {
+        Company companyToCreate = modelMapper.map(company, Company.class);
+        this.companyRepository.save(companyToCreate);
+        return new SuccessResult("Company added");
     }
 
     @Override
-    public Result update(Company company) {
-        try {
-            Company company1 = this.companyRepository.findById(company.getCompanyId()).orElse(null);
-            if (company1 == null) {
-                throw new CompanyNotFoundException("Invalid company id");
-            }
-            company1.setCompanyName(company.getCompanyName());
-            companyRepository.save(company1);
+    public Result update(UpdateCompanyDto company, int id) {
+            Company UpdateCompanyDto = modelMapper.map(company, Company.class);
+            Company companyToUpdate = this.getByCompanyId(id).getData();
+
+            companyToUpdate.setCompanyName(company.getCompanyName());
+
+            companyRepository.save(companyToUpdate);
             return new SuccessResult("Company updated");
-        } catch (CompanyNotFoundException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
+
     }
 
 
     @Override
     public Result delete(int companyId) {
-        try {
-            Company company = this.companyRepository.findById(companyId).orElse(null);
-            if (company == null) {
-                throw new CompanyNotFoundException("Invalid company id");
-            }
-            companyRepository.delete(company);
+            Company company = this.getByCompanyId(companyId).getData();
             return new SuccessResult("Company deleted");
-        } catch (CompanyNotFoundException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
     }
 
     @Override

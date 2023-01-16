@@ -4,8 +4,10 @@ import com.enoca.backendChallenge.business.abstracts.EmployeeService;
 import com.enoca.backendChallenge.core.results.*;
 import com.enoca.backendChallenge.dataAccess.abstracts.EmployeeRepository;
 import com.enoca.backendChallenge.entities.concretes.Employee;
+import com.enoca.backendChallenge.entities.dtos.CreateEmployeeDto;
+import com.enoca.backendChallenge.entities.dtos.UpdateEmployeeDto;
 import com.enoca.backendChallenge.exceptions.EmployeeNotFoundException;
-import com.enoca.backendChallenge.exceptions.InvalidEmployeeIdException;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,55 +17,43 @@ import java.util.List;
 public class EmployeeManager implements EmployeeService {
 
     @Autowired
-    public EmployeeManager(EmployeeRepository employeeRepository) {
+    public EmployeeManager(EmployeeRepository employeeRepository, ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
+        this.modelMapper = modelMapper;
     }
-
     private EmployeeRepository employeeRepository;
+    private ModelMapper modelMapper;
 
 
     @Override
-    public Result create(Employee employee) {
-        try {
-            if (employee.getEmployeeId() == 0) {
-                throw new InvalidEmployeeIdException("Employee id can not be 0");
-            }
-            this.employeeRepository.save(employee);
+    public Result create(CreateEmployeeDto employee) {
+        Employee employeeToCreate = modelMapper.map(employee, Employee.class);
+            this.employeeRepository.save(employeeToCreate);
             return new SuccessResult("Employee added");
-        } catch (InvalidEmployeeIdException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
     }
 
+
     @Override
-    public Result update(Employee employee) {
-        try {
-            Employee employee1 = this.employeeRepository.findById(employee.getEmployeeId()).orElse(null);
-            if (employee1 == null) {
-                throw new EmployeeNotFoundException("Invalid employee id");
-            }
-            employee1.setPhoneNumber(employee.getPhoneNumber());
-            employee1.setEmail(employee.getEmail());
-            employee1.setPassword(employee.getPassword());
-            employeeRepository.save(employee1);
+    public Result update(UpdateEmployeeDto employee, int id) {
+        Employee UpdateEmployeeDto = modelMapper.map(employee, Employee.class);
+        Employee employeToUpdate = this.getByEmployeeId(id).getData();
+
+        employeToUpdate.setName(employee.getName());
+        employeToUpdate.setSurname(employee.getSurname());
+        employeToUpdate.setEmail(employee.getEmail());
+        employeToUpdate.setPassword(employee.getPassword());
+        employeToUpdate.setPassword(employee.getPassword());
+        employeToUpdate.setPosition(employee.getPosition());
+
+            employeeRepository.save(employeToUpdate);
             return new SuccessResult("Employee updated");
-        } catch (EmployeeNotFoundException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
     }
 
     @Override
     public Result delete(int employeeId) {
-        try {
-            Employee employee = this.employeeRepository.findById(employeeId).orElse(null);
-            if (employee == null) {
-                throw new EmployeeNotFoundException("Invalid employee id");
-            }
-            employeeRepository.delete(employee);
+
+            Employee employee = this.getByEmployeeId(employeeId).getData();
             return new SuccessResult("Employee deleted");
-        } catch (EmployeeNotFoundException ex) {
-            return new ErrorResult("Error: " + ex.getMessage());
-        }
     }
 
     @Override
