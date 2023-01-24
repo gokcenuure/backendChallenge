@@ -26,14 +26,16 @@ public class Company {
 
     private String companyName;
 
+    @OneToMany(mappedBy = "company")
+    @JsonIgnore
+    private List<Employee> employees;
+
+
     /*@OneToMany
     @JoinTable(name = "company_employee",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id"))   */
 
-    @OneToMany(mappedBy = "company")
-    @JsonIgnore
-    private List<Employee> employees;
 
 //
 //    public Company(String companyName) {

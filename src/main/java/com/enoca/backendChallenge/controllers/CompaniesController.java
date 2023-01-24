@@ -35,8 +35,8 @@ public class CompaniesController {
         return this.companyService.update(company, id);
     }
 
-    @DeleteMapping("/company/delete")
-    public Result delete(int companyId) {
+    @DeleteMapping("/company/delete/{companyId}")
+    public Result delete(@PathVariable int companyId) {
         return this.companyService.delete(companyId);
     }
 
@@ -45,8 +45,8 @@ public class CompaniesController {
         return companyService.getAll();
     }
 
-    @GetMapping("/company/getById")
-    public Result getByCompanyId(int companyId) {
+    @GetMapping("/company/getById/{companyId}")
+    public Result getByCompanyId(@PathVariable int companyId) {
         return this.companyService.getByCompanyId(companyId);
     }
 

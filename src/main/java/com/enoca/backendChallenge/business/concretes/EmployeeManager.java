@@ -52,13 +52,15 @@ public class EmployeeManager implements EmployeeService {
     @Override
     public Result delete(int employeeId) {
 
-            Employee employee = this.getByEmployeeId(employeeId).getData();
+            Employee employee = this.employeeRepository.getById(employeeId);
+            employeeRepository.delete(employee);
             return new SuccessResult("Employee deleted");
     }
 
     @Override
     public DataResult<List<Employee>> getAll() {
-        return new SuccessDataResult<List<Employee>>(this.employeeRepository.findAll(),"Employees listed");
+        return new SuccessDataResult<List<Employee>>
+                (this.employeeRepository.findAll(),"Employees listed");
     }
 
     @Override

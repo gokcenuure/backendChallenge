@@ -48,13 +48,15 @@ public class CompanyManager implements CompanyService {
 
     @Override
     public Result delete(int companyId) {
-            Company company = this.getByCompanyId(companyId).getData();
+            Company company = this.companyRepository.getById(companyId);
+            companyRepository.delete(company);
             return new SuccessResult("Company deleted");
     }
 
     @Override
     public DataResult<List<Company>> getAll() {
-        return new SuccessDataResult<List<Company>>(this.companyRepository.findAll(), "Companies listed");
+        return new SuccessDataResult<List<Company>>
+                (this.companyRepository.findAll(), "Companies listed");
     }
 
     @Override

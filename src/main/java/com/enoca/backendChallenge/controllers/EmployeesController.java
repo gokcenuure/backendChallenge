@@ -33,8 +33,8 @@ public class EmployeesController {
         return this.employeeService.update(employee, id);
     }
 
-    @DeleteMapping("/employee/delete")
-    public Result delete(int employeeId) {
+    @DeleteMapping("/employee/delete/{employeeId}")
+    public Result delete(@PathVariable int employeeId) {
         return this.employeeService.delete(employeeId);
     }
 
@@ -43,8 +43,8 @@ public class EmployeesController {
         return employeeService.getAll();
     }
 
-    @GetMapping("/employee/getById")
-    public Result getByEmployeeId(int employeeId) {
+    @GetMapping("/employee/getById/{employeeId}")
+    public Result getByEmployeeId(@PathVariable int employeeId) {
         return this.employeeService.getByEmployeeId(employeeId);
     }
 
